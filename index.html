@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cal Poly Student Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <img src="assets/calpoly-logo.png" alt="Cal Poly Logo" class="logo">
+      <nav class="menu">
+        <a href="index.html" class="menu-item active"><i class="icon">🏠</i>Dashboard</a>
+        <div class="menu-item"><i class="icon">🗂</i>Class Search</div>
+        <div class="menu-item"><i class="icon">📅</i>My Schedule</div>
+
+        <!-- Enrollment expandable -->
+        <div class="menu-item expandable" id="enrollment-toggle">
+          <i class="icon">🛒</i>Enrollment <span class="arrow">▼</span>
+        </div>
+        <div class="submenu" id="enrollment-submenu">
+          <a href="schedule.html" class="submenu-item">Schedule Builder</a>
+          <div class="submenu-item">Enrollment Dates</div>
+          <div class="submenu-item">Shopping Cart</div>
+          <div class="submenu-item">View Wait List</div>
+          <div class="submenu-item">Drop Classes</div>
+          <div class="submenu-item">Swap Classes</div>
+          <div class="submenu-item">Edit Enrollment</div>
+        </div>
+
+        <div class="menu-item"><i class="icon">🎓</i>Academic Progress</div>
+        <div class="menu-item"><i class="icon">📁</i>Student Records</div>
+        <div class="menu-item"><i class="icon">💳</i>Financials</div>
+        <div class="menu-item"><i class="icon">📝</i>Admissions</div>
+        <div class="menu-item"><i class="icon">ℹ️</i>To Dos, Tasks and Holds <span class="badge">4</span></div>
+        <div class="menu-item"><i class="icon">👤</i>Personal Information</div>
+        <div class="menu-item"><i class="icon">🌐</i>Resources</div>
+        <div class="menu-item"><i class="icon">📂</i>PeopleSoft Homepage</div>
+      </nav>
+
+      <!-- Footer -->
+      <div class="sidebar-footer">
+        <div class="user-initials">GF</div>
+        <span class="user-name">Gus (A pretty cool dude)</span>
+      </div>
+    </aside>
+
+    <!-- Main dashboard content -->
+    <main class="dashboard">
+      <h1>Hello Gus!</h1>
+
+      <!-- Message of the Day -->
+      <div class="card full-width">
+        <h3>Message of the Day</h3>
+        <div class="card-body">
+          <p><strong>Welcome to your new Student Center!</strong></p>
+          <p>The Student Center platform has been upgraded.</p>
+          <p>The new Student Center features a mobile-friendly interface, intuitive navigation, and convenient access to enrollment, financial, and academic progress resources. Detailed information about the new look of the platform can be found on the <a href="#">Office of the Registrar</a> website.</p>
+        </div>
+      </div>
+
+      <!-- Dashboard grid -->
+      <div class="grid">
+        <div class="column">
+          <div class="card">
+            <h3>Shopping Cart <span class="quarter">Summer Quarter 2025</span></h3>
+            <div class="card-body">
+              <p>You have no classes in your shopping cart.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Wait List <span class="quarter">Summer Quarter 2025</span></h3>
+            <div class="card-body">
+              <p>You have no wait listed classes.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Training to Complete</h3>
+            <div class="card-body">
+              <ul id="training-list"></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="card">
+            <h3>To Dos <span class="badge">4</span></h3>
+            <div class="card-body">
+              <ul>
+                <li>Required Immunization</li>
+                <li>Additional Funding Options</li>
+                <li>Additional Funding Options</li>
+                <li><em>View 1 More</em></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Tasks</h3>
+            <div class="card-body">
+              <p>You have no tasks.</p>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Holds</h3>
+            <div class="card-body">
+              <p>You have no holds.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
