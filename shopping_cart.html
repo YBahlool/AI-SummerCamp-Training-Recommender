@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <img src="assets/calpoly-logo.png" alt="Cal Poly Logo" class="logo">
+      <nav class="menu">
+        <a href="index.html" class="menu-item"><i class="icon">🏠</i>Dashboard</a>
+        <div class="menu-item"><i class="icon">🗂</i>Class Search</div>
+        <div class="menu-item"><i class="icon">📅</i>My Schedule</div>
+
+        <div class="menu-item expandable" id="enrollment-toggle">
+          <i class="icon">🛒</i>Enrollment <span class="arrow">▼</span>
+        </div>
+        <div class="submenu" id="enrollment-submenu">
+          <a href="schedule.html" class="submenu-item">Schedule Builder</a>
+          <div class="submenu-item">Enrollment Dates</div>
+          <a href="shopping_cart.html" class="submenu-item">Shopping Cart</a>
+          <div class="submenu-item">View Wait List</div>
+          <div class="submenu-item">Drop Classes</div>
+          <div class="submenu-item">Swap Classes</div>
+          <div class="submenu-item">Edit Enrollment</div>
+        </div>
+
+        <div class="menu-item"><i class="icon">🎓</i>Academic Progress</div>
+        <div class="menu-item"><i class="icon">📁</i>Student Records</div>
+        <div class="menu-item"><i class="icon">💳</i>Financials</div>
+        <div class="menu-item"><i class="icon">📝</i>Admissions</div>
+        <div class="menu-item"><i class="icon">ℹ️</i>To Dos, Tasks and Holds <span class="badge">4</span></div>
+        <div class="menu-item"><i class="icon">👤</i>Personal Information</div>
+        <div class="menu-item"><i class="icon">🌐</i>Resources</div>
+        <div class="menu-item"><i class="icon">📂</i>PeopleSoft Homepage</div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-initials">GF</div>
+        <span class="user-name">Gus (A pretty cool dude)</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <h1>Shopping Cart</h1>
+      <div class="card">
+        <h2>Your Selected Courses</h2>
+        <table class="course-table" id="cart-table">
+          <thead>
+            <tr>
+              <th>Course Title</th>
+              <th>Units</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="cart-table-body">
+            <!-- Cart items will be populated here -->
+          </tbody>
+        </table>
+        <div id="empty-cart" style="display: none; text-align: center; padding: 2rem;">
+          <p>Your shopping cart is empty.</p>
+          <a href="schedule.html" class="action-btn">Browse Courses</a>
+        </div>
+        <div id="cart-actions" style="margin-top: 1rem;">
+          <button id="register-all-btn" class="action-btn" style="font-size: 1.1rem; padding: 10px 20px;">
+            Register All Courses
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { getCart, removeFromCart, loadCourseData } from './js/cart.js';
+
+    document.addEventListener('DOMContentLoaded', async function() {
+      const courseData = await loadCourseData();
+      renderCart(courseData);
+
+      // Register all button
+      document.getElementById('register-all-btn').addEventListener('click', function() {
+        const cart = getCart();
+        console.log('Registering courses:', cart);
+        alert(`Registering ${cart.length} courses!`);
+      });
+
+      // Enrollment submenu toggle
+      const enrollmentToggle = document.getElementById('enrollment-toggle');
+      const enrollmentSubmenu = document.getElementById('enrollment-submenu');
+      
+      enrollmentToggle.addEventListener('click', () => {
+        enrollmentSubmenu.style.display = 
+          enrollmentSubmenu.style.display === 'flex' ? 'none' : 'flex';
+      });
+    });
+
+    function renderCart(courseData) {
+      const cart = getCart();
+      const tableBody = document.getElementById('cart-table-body');
+      const emptyCart = document.getElementById('empty-cart');
+      const cartActions = document.getElementById('cart-actions');
+
+      tableBody.innerHTML = '';
+
+      if (cart.length === 0) {
+        emptyCart.style.display = 'block';
+        cartActions.style.display = 'none';
+        return;
+      }
+
+      emptyCart.style.display = 'none';
+      cartActions.style.display = 'block';
+
+      cart.forEach(courseCode => {
+        const course = courseData[courseCode];
+        if (course) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${course.name}</td>
+            <td>${course.units}</td>
+            <td>
+              <button class="trash-btn" onclick="removeCourse('${courseCode}')">🗑️</button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        }
+      });
+    }
+
+    window.removeCourse = function(courseCode) {
+      removeFromCart(courseCode);
+      location.reload(); // Simple refresh to update the cart display
+    };
+  </script>
+</body>
+</html>

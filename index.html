@@ -22,7 +22,7 @@
         <div class="submenu" id="enrollment-submenu">
           <a href="schedule.html" class="submenu-item">Schedule Builder</a>
           <div class="submenu-item">Enrollment Dates</div>
-          <div class="submenu-item">Shopping Cart</div>
+          <a href="shopping_cart.html" class="submenu-item">Shopping Cart</a>
           <div class="submenu-item">View Wait List</div>
           <div class="submenu-item">Drop Classes</div>
           <div class="submenu-item">Swap Classes</div>
@@ -65,7 +65,13 @@
         <div class="card">
           <h3>Shopping Cart <span class="quarter">Summer Quarter 2025</span></h3>
           <div class="card-body">
-            <p>You have no classes in your shopping cart.</p>
+            <div id="cart-summary">
+              <p>You have no classes in your shopping cart.</p>
+            </div>
+            <ul id="cart-list" style="display: none;"></ul>
+            <div id="cart-actions" style="display: none; margin-top: 0.5rem;">
+              <a href="shopping_cart.html" class="action-btn" style="text-decoration: none; display: inline-block;">View Cart</a>
+            </div>
           </div>
         </div>
 

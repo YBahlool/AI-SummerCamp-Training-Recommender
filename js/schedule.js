@@ -1,3 +1,5 @@
+import { addToCart } from './cart.js';
+
 document.addEventListener("DOMContentLoaded", function () {
   fetch("data/course_info.json")
     .then((response) => response.json())
@@ -17,10 +19,17 @@ document.addEventListener("DOMContentLoaded", function () {
             <td>${course.units}</td>
             <td>✔️</td>
             <td>
-              <button class="btn btn-green">Select Sections</button>
-              <span class="trash-icon">🗑️</span>
+              <button class="action-btn" data-course-code="${courseCode}">Add to Cart</button>
+              <span class="trash-btn">🗑️</span>
             </td>
           `;
+          
+          // Add event listener to the Add to Cart button
+          const addButton = row.querySelector('.action-btn');
+          addButton.addEventListener('click', function() {
+            addToCart(courseCode);
+          });
+          
           tableBody.appendChild(row);
         }
       });
