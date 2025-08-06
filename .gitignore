@@ -1,0 +1,5 @@
+# Ignore secret keys or config files
+.env
+config/keys.js
+*.log
+node_modules/

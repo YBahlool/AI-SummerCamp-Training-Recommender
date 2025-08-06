@@ -1,17 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // Load training list
-  const trainings = JSON.parse(localStorage.getItem("trainingList")) || [
-    "Lab Electrical Safety",
-    "Soldering Safety",
-    "General Chemical Handling"
-  ];
-
-  const list = document.getElementById("training-list");
-  trainings.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = item;
-    list.appendChild(li);
-  });
+  // Load training requirements from API
+  await loadTrainingRequirements();
 
   // Load and display cart items
   await loadCartSummary();
@@ -25,6 +14,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     enrollmentSubmenu.style.display = isVisible ? "none" : "flex";
   });
 });
+
+async function loadTrainingRequirements() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const list = document.getElementById("training-list");
+  const badge = document.getElementById("training-badge");
+  
+  if (cart.length === 0) {
+    list.innerHTML = '<li>Add courses to your cart to see required trainings</li>';
+    badge.style.display = 'none';
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:3000/api/getRequiredTrainings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ courses: cart })
+    });
+    
+    const data = await response.json();
+    
+    list.innerHTML = '';
+    data.trainings.forEach(training => {
+      const li = document.createElement('li');
+      li.textContent = training;
+      list.appendChild(li);
+    });
+    
+    // Update badge with training count
+    badge.textContent = data.trainings.length;
+    badge.style.display = data.trainings.length > 0 ? 'inline' : 'none';
+  } catch (error) {
+    console.error('Failed to load training requirements:', error);
+    list.innerHTML = '<li>Unable to load training requirements</li>';
+    badge.style.display = 'none';
+  }
+}
 
 async function loadCartSummary() {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];

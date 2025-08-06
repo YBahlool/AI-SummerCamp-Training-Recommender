@@ -11,7 +11,9 @@
     <aside class="sidebar">
       <img src="assets/calpoly-logo.png" alt="Cal Poly Logo" class="logo">
       <nav class="menu">
-        <a href="index.html" class="menu-item active"><i class="icon">🏠</i>Dashboard</a>
+        <a href="index.html" class="menu-item active">
+          <img class="icon" src="assets/dashboard-icon.png" alt="Dashboard">Dashboard
+        </a>
         <div class="menu-item"><i class="icon">🗂</i>Class Search</div>
         <div class="menu-item"><i class="icon">📅</i>My Schedule</div>
 
@@ -50,18 +52,31 @@
     <main class="dashboard">
       <h1>Hello Gus!</h1>
 
-      <!-- Message of the Day -->
-      <div class="card full-width">
-        <h3>Message of the Day</h3>
-        <div class="card-body">
-          <p><strong>Welcome to your new Student Center!</strong></p>
-          <p>The Student Center platform has been upgraded.</p>
-          <p>The new Student Center features a mobile-friendly interface, intuitive navigation, and convenient access to enrollment, financial, and academic progress resources. Detailed information about the new look of the platform can be found on the <a href="#">Office of the Registrar</a> website.</p>
-        </div>
-      </div>
-
       <!-- Dashboard grid with two-column layout -->
       <div class="grid two-column">
+        <!-- Top Row -->
+        <div class="card">
+          <h3>Message of the Day</h3>
+          <div class="card-body">
+            <p><strong>Welcome to your new Student Center!</strong></p>
+            <p>The Student Center platform has been upgraded.</p>
+            <p>The new Student Center features a mobile-friendly interface, intuitive navigation, and convenient access to enrollment, financial, and academic progress resources. Detailed information about the new look of the platform can be found on the <a href="#">Office of the Registrar</a> website.</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>To Dos <span class="badge">4</span></h3>
+          <div class="card-body">
+            <ul>
+              <li>Required Immunization</li>
+              <li>Additional Funding Options</li>
+              <li>Additional Funding Options</li>
+              <li><em>View 1 More</em></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Middle Row -->
         <div class="card">
           <h3>Shopping Cart <span class="quarter">Summer Quarter 2025</span></h3>
           <div class="card-body">
@@ -76,28 +91,17 @@
         </div>
 
         <div class="card">
-          <h3>Wait List <span class="quarter">Summer Quarter 2025</span></h3>
-          <div class="card-body">
-            <p>You have no wait listed classes.</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Training to Complete</h3>
+          <h3>Required Trainings<span class="badge" id="training-badge" style="display: none;">0</span></h3>
           <div class="card-body">
             <ul id="training-list"></ul>
           </div>
         </div>
 
+        <!-- Bottom Row -->
         <div class="card">
-          <h3>To Dos <span class="badge">4</span></h3>
+          <h3>Wait List <span class="quarter">Summer Quarter 2025</span></h3>
           <div class="card-body">
-            <ul>
-              <li>Required Immunization</li>
-              <li>Additional Funding Options</li>
-              <li>Additional Funding Options</li>
-              <li><em>View 1 More</em></li>
-            </ul>
+            <p>You have no wait listed classes.</p>
           </div>
         </div>
 
