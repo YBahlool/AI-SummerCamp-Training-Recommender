@@ -13,7 +13,6 @@ export function addToCart(courseCode) {
     cart.push(courseCode);
     saveCart(cart);
     showToast(`${courseCode} added to cart!`);
-    refreshTrainingRequirements();
     return true;
   }
   showToast(`${courseCode} is already in cart`);
@@ -26,7 +25,6 @@ export function removeFromCart(courseCode) {
   if (index > -1) {
     cart.splice(index, 1);
     saveCart(cart);
-    refreshTrainingRequirements();
     return true;
   }
   return false;
@@ -45,10 +43,10 @@ function showToast(message) {
   }, 3000);
 }
 
-// Load cart data from course_info.json
+// Load cart data from API
 export async function loadCourseData() {
   try {
-    const response = await fetch('data/course_info.json');
+    const response = await fetch('http://localhost:3000/api/courseData');
     const departments = await response.json();
     
     const courseMap = {};
@@ -63,46 +61,8 @@ export async function loadCourseData() {
     
     return courseMap;
   } catch (error) {
-    console.error('Failed to load course data:', error);
+    console.error('Failed to load course data from API:', error);
     return {};
   }
 }
 
-async function refreshTrainingRequirements() {
-  const cart = getCart();
-  const list = document.getElementById("training-list");
-  const badge = document.getElementById("training-badge");
-  
-  if (!list) return; // Not on dashboard page
-  
-  if (cart.length === 0) {
-    list.innerHTML = '<li>Add courses to your cart to see required trainings</li>';
-    if (badge) badge.style.display = 'none';
-    return;
-  }
-
-  try {
-    const response = await fetch('http://localhost:3000/api/getRequiredTrainings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ courses: cart })
-    });
-    
-    const data = await response.json();
-    
-    list.innerHTML = '';
-    data.trainings.forEach(training => {
-      const li = document.createElement('li');
-      li.textContent = training;
-      list.appendChild(li);
-    });
-    
-    // Update badge with training count
-    if (badge) {
-      badge.textContent = data.trainings.length;
-      badge.style.display = data.trainings.length > 0 ? 'inline' : 'none';
-    }
-  } catch (error) {
-    console.error('Failed to refresh training requirements:', error);
-  }
-}

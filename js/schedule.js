@@ -1,9 +1,14 @@
 import { addToCart } from './cart.js';
 
 document.addEventListener("DOMContentLoaded", function () {
-  fetch("data/course_info.json")
-    .then((response) => response.json())
+  console.log('Schedule page loaded, fetching course data...');
+  fetch("http://localhost:3000/api/courseData")
+    .then((response) => {
+      console.log('API response status:', response.status);
+      return response.json();
+    })
     .then((departments) => {
+      console.log('Received departments:', departments);
       const tableBody = document.querySelector("#courseTableBody");
 
       departments.forEach((deptObj) => {

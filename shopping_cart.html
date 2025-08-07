@@ -80,10 +80,34 @@
       renderCart(courseData);
 
       // Register all button
-      document.getElementById('register-all-btn').addEventListener('click', function() {
+      document.getElementById('register-all-btn').addEventListener('click', async function() {
         const cart = getCart();
         console.log('Registering courses:', cart);
-        alert(`Registering ${cart.length} courses!`);
+        
+        if (cart.length === 0) {
+          alert('No courses in cart to register!');
+          return;
+        }
+        
+        try {
+          // Call API to get required trainings
+          const response = await fetch('http://localhost:3000/api/getRequiredTrainings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ courses: cart })
+          });
+          
+          const data = await response.json();
+          
+          // Store trainings in localStorage
+          localStorage.setItem('registeredTrainings', JSON.stringify(data.trainings));
+          localStorage.setItem('registeredCourses', JSON.stringify(data.courses));
+          
+          alert(`Successfully registered courses:\n${data.courses.join('\n')}\n\nRequired trainings:\n${data.trainings.join('\n')}`);
+        } catch (error) {
+          console.error('Error getting trainings:', error);
+          alert('Error registering courses. Please try again.');
+        }
       });
 
       // Enrollment submenu toggle

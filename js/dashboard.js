@@ -5,6 +5,27 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load and display cart items
   await loadCartSummary();
 
+  // Reset functionality via PeopleSoft Homepage menu item
+  document.getElementById('reset-menu-item').addEventListener('click', async () => {
+    try {
+      // Clear localStorage
+      localStorage.removeItem('cart');
+      localStorage.removeItem('registeredTrainings');
+      localStorage.removeItem('registeredCourses');
+      
+      // Call server reset endpoint
+      await fetch('http://localhost:3000/api/reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      // Refresh page
+      location.reload();
+    } catch (error) {
+      console.error('Reset failed:', error);
+    }
+  });
+
   // Sidebar toggle for Enrollment
   const enrollmentToggle = document.getElementById("enrollment-toggle");
   const enrollmentSubmenu = document.getElementById("enrollment-submenu");
@@ -16,40 +37,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadTrainingRequirements() {
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const list = document.getElementById("training-list");
   const badge = document.getElementById("training-badge");
   
-  if (cart.length === 0) {
-    list.innerHTML = '<li>Add courses to your cart to see required trainings</li>';
+  // Load stored trainings from registration
+  const storedTrainings = JSON.parse(localStorage.getItem('registeredTrainings')) || [];
+  const storedCourses = JSON.parse(localStorage.getItem('registeredCourses')) || [];
+  
+  if (storedTrainings.length === 0) {
+    list.innerHTML = '<li>Register courses to see required trainings</li>';
     badge.style.display = 'none';
     return;
   }
-
-  try {
-    const response = await fetch('http://localhost:3000/api/getRequiredTrainings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ courses: cart })
-    });
-    
-    const data = await response.json();
-    
-    list.innerHTML = '';
-    data.trainings.forEach(training => {
-      const li = document.createElement('li');
-      li.textContent = training;
-      list.appendChild(li);
-    });
-    
-    // Update badge with training count
-    badge.textContent = data.trainings.length;
-    badge.style.display = data.trainings.length > 0 ? 'inline' : 'none';
-  } catch (error) {
-    console.error('Failed to load training requirements:', error);
-    list.innerHTML = '<li>Unable to load training requirements</li>';
-    badge.style.display = 'none';
-  }
+  
+  list.innerHTML = '';
+  storedTrainings.forEach(training => {
+    const li = document.createElement('li');
+    li.textContent = training;
+    list.appendChild(li);
+  });
+  
+  // Update badge with training count
+  badge.textContent = storedTrainings.length;
+  badge.style.display = storedTrainings.length > 0 ? 'inline' : 'none';
+  
+  console.log('Loaded stored trainings for courses:', storedCourses);
 }
 
 async function loadCartSummary() {
