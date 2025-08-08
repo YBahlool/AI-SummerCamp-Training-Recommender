@@ -13,11 +13,15 @@ app.use(cors());
 
 // Configure AWS services
 const bedrock = new AWS.BedrockRuntime({
-  region: process.env.AWS_REGION || 'us-east-1'
+  region: process.env.AWS_REGION || 'us-west-2'
+});
+
+const bedrockAgent = new AWS.BedrockAgentRuntime({
+  region: process.env.AWS_REGION || 'us-west-2'
 });
 
 const s3 = new AWS.S3({
-  region: process.env.AWS_REGION || 'us-east-1'
+  region: process.env.AWS_REGION || 'us-west-2'
 });
 
 // Load training catalog from PDF
@@ -118,7 +122,7 @@ const fallbackTrainings = {
 
 async function callBedrock(prompt) {
   const params = {
-    modelId: 'anthropic.claude-3-sonnet-20240229-v1:0',
+    modelId: 'arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-3-5-sonnet-20241022-v2:0',
     contentType: 'application/json',
     accept: 'application/json',
     body: JSON.stringify({
@@ -135,6 +139,43 @@ async function callBedrock(prompt) {
   const responseBody = JSON.parse(response.body.toString());
   return responseBody.content[0].text;
 }
+
+// POST endpoint for chatbot knowledge base queries
+app.post('/api/bedrock-query', async (req, res) => {
+  try {
+    const { knowledgeBaseId, modelArn, input } = req.body;
+    console.log('Knowledge base query:', { knowledgeBaseId, modelArn, inputText: input?.text });
+
+    const params = {
+      input,
+      retrieveAndGenerateConfiguration: {
+        type: 'KNOWLEDGE_BASE',
+        knowledgeBaseConfiguration: {
+          knowledgeBaseId,
+          modelArn
+        }
+      }
+    };
+
+    console.log('Calling Bedrock with params:', JSON.stringify(params, null, 2));
+    const response = await bedrockAgent.retrieveAndGenerate(params).promise();
+    
+    res.json({
+      output: {
+        text: response.output.text
+      }
+    });
+  } catch (error) {
+    console.error('Bedrock query error:', error.message);
+    console.error('Error code:', error.code);
+    console.error('Full error:', error);
+    
+    res.status(500).json({ 
+      error: 'Failed to query knowledge base',
+      details: error.message 
+    });
+  }
+});
 
 // POST endpoint to reset all data
 app.post('/api/reset', (req, res) => {
@@ -257,6 +298,14 @@ app.post('/api/getRequiredTrainings', async (req, res) => {
       courses: courseNames
     });
   }
+});
+
+// Serve static files
+app.use(express.static(__dirname));
+
+// Serve index.html at root
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
 });
 
 // Start server
